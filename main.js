@@ -2,7 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { join } from 'path';
 
-import todoRouter from './routers/todos-router.js';
+import studentRouter from './routers/student-router.js';
 import mongoose from 'mongoose';
 
 dotenv.config({
@@ -13,7 +13,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use('/todos', todoRouter);
+app.use('/students', studentRouter);
 
 app.use((req, res) => {
   res.statusCode = 404;
