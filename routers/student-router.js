@@ -4,7 +4,7 @@ import {
     deleteStudent,
     editStudent,
     getStudent,
-    getStudents
+    getStudents,
 } from '../controllers/students-controller.js'
 
 const studentRouter = express.Router()
