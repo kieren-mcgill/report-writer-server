@@ -4,7 +4,7 @@ import {
     getUser,
     createUser,
     deleteUser,
-    linkStudent
+    editUser
 
 
 } from '../controllers/users-controller.js'
@@ -13,7 +13,7 @@ const userRouter = express.Router()
 
 userRouter.get('/:username', getUser)
 userRouter.post('/', createUser)
-userRouter.delete('/:id', deleteUser)
-userRouter.patch('/:id', linkStudent)
+userRouter.delete('/:userId', deleteUser)
+userRouter.patch('/:userId', editUser)
 
 export default userRouter

@@ -6,7 +6,8 @@ const studentSchema = new mongoose.Schema({
   yearGroup: Number,
   gender: String,
   generalNotes: String,
-  generalReport: String
+  generalReport: String,
+  userId: String
 });
 
 export const Student = mongoose.models.Student || mongoose.model('Student', studentSchema);

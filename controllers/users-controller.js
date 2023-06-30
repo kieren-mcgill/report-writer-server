@@ -1,36 +1,40 @@
 import {User} from '../models/user.js'
+import {Student} from "../models/student.js";
 
 export const getUser = (req, res) => {
     const {username} = req.params
     User.find({username}).then((user) => {
-        res.send(user)
+        res.send(user[0])
     })
 }
 
 export const createUser = (req, res) => {
-    const {username, password} = req.body
-    const user = new User({username, password});
+    const {username, password, organisation} = req.body
+    const user = new User({username, password, organisation});
     user.save().then((savedUser) => {
         res.send(savedUser)
     })
 }
 
 export const deleteUser = (req, res) => {
-    const {id} = req.params
-    User.findByIdAndDelete(id).then(() => {
+    const {userId} = req.params
+    User.findByIdAndDelete(userId).then(() => {
         res.send({status: 'success'})
     })
 }
 
-export const linkStudent = (req, res) => {
-    const {id} = req.params
-    const {studentId} = req.body
-    User.findById(id)
-        .then((linkedUser) => {
-            linkedUser.linkedStudents = [...linkedUser.linkedStudents, studentId]
-            return linkedUser.save()
+export const editUser = (req, res) => {
+    const {username, password, organisation} = req.body
+    const {userId} = req.params
+    Student.findById(userId)
+        .then((user) => {
+            user.username = username;
+            user.password = password;
+            user.organisation = organisation;
+            return user.save();
         })
-        .then((linkedUser) => {
-            res.send(linkedUser)
+        .then((savedUser) => {
+            res.send(savedUser);
         })
 }
+
