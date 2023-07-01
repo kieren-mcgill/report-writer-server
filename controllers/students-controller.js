@@ -1,7 +1,7 @@
 import {Student} from '../models/student.js'
 
 export const getStudents = (req, res) => {
-    const { userId } = req.body
+    const { userId } = req.params
     Student.find({userId})
         .then((students) => {
         res.send(students)
