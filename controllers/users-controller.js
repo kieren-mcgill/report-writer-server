@@ -9,8 +9,8 @@ export const getUser = (req, res) => {
 }
 
 export const createUser = (req, res) => {
-    const {username, password, organisation} = req.body
-    const user = new User({username, password, organisation});
+    const {username, password, organisation, yearGroup} = req.body
+    const user = new User({username, password, organisation, yearGroup})
     user.save().then((savedUser) => {
         res.send(savedUser)
     })
@@ -24,17 +24,18 @@ export const deleteUser = (req, res) => {
 }
 
 export const editUser = (req, res) => {
-    const {username, password, organisation} = req.body
+    const {username, password, organisation, yearGroup} = req.body
     const {userId} = req.params
     Student.findById(userId)
         .then((user) => {
-            user.username = username;
-            user.password = password;
-            user.organisation = organisation;
-            return user.save();
+            user.username = username
+            user.password = password
+            user.organisation = organisation
+            user.yearGroup = yearGroup
+            return user.save()
         })
         .then((savedUser) => {
-            res.send(savedUser);
+            res.send(savedUser)
         })
 }
 

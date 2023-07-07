@@ -8,14 +8,6 @@ export const getStudents = (req, res) => {
     })
 }
 
-export const getStudent = (req, res) => {
-    const { studentId } = req.params
-    Student.findById(studentId)
-        .then((student) => {
-        res.send(student)
-    })
-}
-
 export const createStudent = (req, res) => {
     const {
         firstName,
@@ -36,32 +28,34 @@ export const createStudent = (req, res) => {
         userId
     })
     student.save()
-        .then((savedStudent) => {
-        res.send(savedStudent)
-    })
+        .then(() => {
+            res.send({status: `new student ${firstName} ${lastName} has been created`})
+        })
 }
 
 export const deleteStudent = (req, res) => {
     const { studentId } = req.params
     Student.findByIdAndDelete(studentId)
         .then(() => {
-        res.send({status: 'success'})
+        res.send({status: `student: ${studentId} has been deleted`})
     })
 }
 
 export const editStudent = (req, res) => {
-    const {firstName, lastName, generalNotes, generalReport} = req.body
+    const {generalNotes, generalReport} = req.body
     const {studentId} = req.params
     Student.findById(studentId)
         .then((student) => {
-            student.firstName = firstName;
-            student.lastName = lastName;
-            student.generalNotes = generalNotes;
-            student.generalReport = generalReport;
+            if (generalNotes) {
+                student.generalNotes = generalNotes
+            }
+            if (generalReport) {
+            student.generalReport = generalReport
+            }
             return student.save();
         })
-        .then((savedStudent) => {
-            res.send(savedStudent);
+        .then(() => {
+            res.send({status: `student: ${studentId} has been edited`})
         })
 }
 
