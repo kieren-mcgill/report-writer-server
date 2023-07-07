@@ -1,12 +1,13 @@
 import { Configuration, OpenAIApi } from "openai"
 
 const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: "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"
 })
 
 const openai = new OpenAIApi(configuration)
 export const generateReport = async (req, res) => {
     const { firstName, yearGroup, gender } = req.body
+    console.log(req.body)
     const prompt = `Write an end of year report for a uk student approximately 100 words long. 
                     The student is ${gender}, is called ${firstName} and is in year ${yearGroup}`
     try {

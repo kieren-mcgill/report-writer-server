@@ -1,5 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import cors from "cors"
 import { join } from 'path'
 import studentRouter from './routers/student-router.js'
 import userRouter from './routers/user-router.js'
@@ -11,6 +12,8 @@ dotenv.config({
 })
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 
