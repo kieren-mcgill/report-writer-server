@@ -1,22 +1,28 @@
 import {Student} from '../models/student.js'
+import {User} from "../models/user.js"
 
 export const getStudents = (req, res) => {
-    const { userId } = req.params
-    Student.find({userId})
-        .then((students) => {
-        res.send(students)
+    const {userId} = req.params
+    User.findById(userId).populate('students')
+        .then((foundUser) => {
+            if (!foundUser) {
+                return res.status(404).json({message: "There was a problem finding students for this user"})
+            }
+            res.send(foundUser.students)
+        }).catch((error) => {
+        res.status(500).json({message: "Sorry, something's gone wrong"})
     })
 }
 
 export const createStudent = (req, res) => {
+    const {userId} = req.params
     const {
         firstName,
         lastName,
         yearGroup,
         gender,
         generalNotes,
-        generalReport,
-        userId
+        generalReport
     } = req.body
     const student = new Student({
         firstName,
@@ -24,21 +30,40 @@ export const createStudent = (req, res) => {
         yearGroup,
         gender,
         generalNotes,
-        generalReport,
-        userId
+        generalReport
     })
     student.save()
-        .then(() => {
-            res.send({status: `new student ${firstName} ${lastName} has been created`})
+        .then((savedStudent) => {
+            User.findById(userId)
+                .then((foundUser) => {
+                    if (!foundUser) {
+                        res.status(404).json({ message: "Sorry, I can't find a user for this student" });
+                    }
+                    foundUser.students.push(savedStudent._id)
+                    foundUser.save()
+                })
+        }).then(() => res.send({message: `new student ${firstName} ${lastName} has been created`}))
+        .catch((error) => {
+            res.status(500).json({ message: "Sorry, something's gone wrong" })
         })
 }
 
 export const deleteStudent = (req, res) => {
-    const { studentId } = req.params
+    const {userId, studentId} = req.params
     Student.findByIdAndDelete(studentId)
         .then(() => {
-        res.send({status: `student: ${studentId} has been deleted`})
-    })
+            User.findById(userId)
+                .then((foundUser) => {
+                    if (!foundUser) {
+                        res.status(404).json({message: "User not found"})
+                    }
+                    foundUser.students = foundUser.students.filter((student) => student.toString() !== studentId)
+                    foundUser.save()
+                }).then(() => res.send({message: `The student has been deleted`}))
+        })
+        .catch((error) => {
+            res.status(500).json({ message: "Sorry, something's gone wrong" })
+        })
 }
 
 export const editStudent = (req, res) => {
@@ -46,16 +71,22 @@ export const editStudent = (req, res) => {
     const {studentId} = req.params
     Student.findById(studentId)
         .then((student) => {
+            if (!student) {
+                return res.status(404).json({message: "Student not found"})
+            }
             if (generalNotes) {
                 student.generalNotes = generalNotes
             }
             if (generalReport) {
-            student.generalReport = generalReport
+                student.generalReport = generalReport
             }
-            return student.save();
+            return student.save()
         })
         .then(() => {
-            res.send({status: `student: ${studentId} has been edited`})
+            res.send({message: `The student has been edited`})
+        })
+        .catch((error) => {
+            res.status(500).json({ message: "Sorry, something's gone wrong" })
         })
 }
 

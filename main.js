@@ -5,6 +5,7 @@ import { join } from 'path'
 import studentRouter from './routers/student-router.js'
 import userRouter from './routers/user-router.js'
 import generateRouter from './routers/generate-router.js'
+import gatewayRouter from './routers/gateway-router.js'
 import mongoose from 'mongoose'
 
 dotenv.config({
@@ -16,6 +17,10 @@ const app = express()
 app.use(cors())
 
 app.use(express.json())
+
+app.use('/gateway', gatewayRouter)
+
+//Auth goes here
 
 app.use('/students', studentRouter)
 

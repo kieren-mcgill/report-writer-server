@@ -9,8 +9,8 @@ import {
 const studentRouter = express.Router()
 
 studentRouter.get('/:userId', getStudents)
-studentRouter.post('/', createStudent)
-studentRouter.delete('/:studentId', deleteStudent)
-studentRouter.patch('/:studentId', editStudent)
+studentRouter.post('/:userId', createStudent)
+studentRouter.delete('/:userId/:studentId', deleteStudent)
+studentRouter.patch('/:userId/:studentId', editStudent)
 
 export default studentRouter
