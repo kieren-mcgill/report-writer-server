@@ -1,11 +1,15 @@
 import {Configuration, OpenAIApi} from "openai"
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const configuration = new Configuration({
-    apiKey: "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"
+    apiKey: process.env.OPENAI_API_KEY
 })
 
 const openai = new OpenAIApi(configuration)
 export const generateReport = async (req, res) => {
+    console.log(process.env.OPENAI_API_KEY)
     const {firstName, yearGroup, gender, generalNotes} = req.body
     const prompt = `Write a general statement for an end-of-year school report for a uk student,
                     approximately 100 words long.
@@ -30,6 +34,7 @@ export const generateReport = async (req, res) => {
             message: completion,
         })
     } catch (error) {
+        console.error(error)
         return res.status(500).json({
             success: false,
             message: "Sorry, there was a problem generating this report",

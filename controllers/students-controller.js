@@ -74,16 +74,16 @@ export const editStudent = (req, res) => {
             if (!student) {
                 return res.status(404).json({message: "Student not found"})
             }
-            if (generalNotes) {
+            if (generalNotes !== undefined) {
                 student.generalNotes = generalNotes
             }
-            if (generalReport) {
+            if (generalReport !== undefined) {
                 student.generalReport = generalReport
             }
             return student.save()
         })
         .then(() => {
-            res.send({message: `The student has been edited`})
+            res.send({message: `The student's ${generalNotes ? 'notes have' : 'report has'} been updated`})
         })
         .catch((error) => {
             res.status(500).json({ message: "Sorry, something's gone wrong" })
